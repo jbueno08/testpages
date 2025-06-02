@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Verdad o Reto +18 para José y Maricielo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #2a2a2a, #1b0a1d);
+    font-family: 'Poppins', sans-serif;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  h1 {
+    margin-top: 40px;
+    font-weight: 700;
+    font-size: 2.8rem;
+    text-align: center;
+    color: #ff3366;
+    text-shadow: 0 0 8px #ff6699;
+  }
+  #game-container {
+    background: #330022;
+    border-radius: 16px;
+    padding: 30px 40px;
+    width: 90%;
+    max-width: 480px;
+    box-shadow: 0 0 20px #ff3366aa;
+    margin-top: 40px;
+    text-align: center;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #intro-text {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    line-height: 1.4;
+  }
+  button {
+    font-size: 1.25rem;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 12px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 0 10px #ff3366cc;
+    user-select: none;
+  }
+  button:focus {
+    outline: none;
+    box-shadow: 0 0 15px #ff6699ff;
+  }
+  #btn-jose, #btn-maricielo {
+    width: 45%;
+    background: #ff3366;
+    color: white;
+  }
+  #btn-jose:hover, #btn-maricielo:hover {
+    background: #ff5588;
+  }
+  #truth-btn, #dare-btn {
+    width: 45%;
+    color: white;
+  }
+  #truth-btn {
+    background: #ff6699;
+  }
+  #truth-btn:hover {
+    background: #ff88aa;
+  }
+  #dare-btn {
+    background: #cc0044;
+  }
+  #dare-btn:hover {
+    background: #dd3366;
+  }
+  #confirm-btn, #next-btn {
+    background: #ff3366;
+    color: white;
+    width: 90%;
+  }
+  #confirm-btn:disabled, #next-btn:disabled {
+    background: #662244;
+    cursor: not-allowed;
+  }
+  #confirm-btn:hover:enabled, #next-btn:hover:enabled {
+    background: #ff5588;
+  }
+  #question {
+    margin: 30px 0 24px 0;
+    font-size: 1.4rem;
+    min-height: 72px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: #ffd1dc;
+    max-width: 420px;
+  }
+  #turn-indicator {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #ff99bb;
+  }
+  #footer {
+    margin-top: auto;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: #aa5577;
+  }
+  .btn-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  @media (max-width: 400px) {
+    #game-container {
+      padding: 20px 25px;
+    }
+    button {
+      font-size: 1rem;
+      padding: 10px 18px;
+      margin: 8px;
+    }
+    h1 {
+      font-size: 2rem;
+    }
+    #question {
+      font-size: 1.1rem;
+      min-height: 60px;
+    }
+    .btn-row {
+      flex-direction: column;
+      gap: 10px;
+    }
+    #btn-jose, #btn-maricielo, #truth-btn, #dare-btn {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>Verdad o Reto +18 para José y Maricielo 💕</h1>
+  <div id="game-container">
+    <div id="turn-indicator" style="display:none;"></div>
+
+    <div id="choose-player" >
+      <div id="intro-text">¿Quién está jugando ahora?</div>
+      <div class="btn-row">
+        <button id="btn-jose">Soy José</button>
+        <button id="btn-maricielo">Soy Maricielo</button>
+      </div>
+    </div>
+
+    <div id="choice-buttons" style="display:none;">
+      <div id="intro-text">Elige <em>Verdad</em> o <em>Reto</em>:</div>
+      <div class="btn-row">
+        <button id="truth-btn">Verdad</button>
+        <button id="dare-btn">Reto</button>
+      </div>
+    </div>
+
+    <div id="question-container" style="display:none;">
+      <div id="question"></div>
+      <div class="btn-row">
+        <button id="confirm-btn" disabled>Respondí / Reto completado</button>
+        <button id="next-btn" disabled>Siguiente</button>
+      </div>
+    </div>
+
+  </div>
+  <div id="footer">&copy; Juego para adultos. Juega siempre con respeto y consentimiento.</div>
+
+<script>
+  const truths_hombre = [
+    "¿Qué es lo que más te gusta de Maricielo?",
+    "¿Cuál ha sido tu cita favorita con Maricielo?",
+    "¿Qué detalle romántico te gustaría recibir de Maricielo?",
+    "¿Cuál fue tu primer pensamiento cuando viste a Maricielo por primera vez?",
+    "¿Qué canción te recuerda a un momento especial con Maricielo?",
+    "¿Cuál es tu forma favorita de demostrar cariño a Maricielo?",
+    "¿Qué sueño te gustaría cumplir con Maricielo?",
+    "¿Qué te gusta que te diga Maricielo cuando están juntos?",
+    "¿Cuál ha sido un momento divertido que recuerdas con ella?",
+    "¿Qué lugar te gustaría visitar con Maricielo para una escapada romántica?",
+    "¿Qué es lo más dulce que has hecho por Maricielo?",
+    "¿Cuál fue el primer detalle que notaste de Maricielo?",
+    "¿Qué es lo que más valoras en vuestra relación?",
+    "¿Tienes algún apodo cariñoso para Maricielo? ¿Cuál?",
+    "¿Cuál es la comida favorita que te gusta compartir con Maricielo?",
+    "¿Qué momento con Maricielo te hace sonreír siempre?",
+    "¿Qué palabras te gustaría escuchar de Maricielo con más frecuencia?",
+    "¿Cuál es tu recuerdo más especial con Maricielo durante un viaje?",
+    "¿Qué sería un plan perfecto para una noche juntos?",
+    "¿Qué hábito o costumbre de Maricielo te encanta?",
+    "¿Qué película romántica te recuerda a vuestra historia?",
+    "¿Cómo describirías a Maricielo en tres palabras?",
+    "¿Qué desafío divertido te gustaría intentar con Maricielo?",
+    "¿Qué canción dedicarías a Maricielo ahora mismo?",
+    "¿Cuál es tu lugar favorito para un abrazo con Maricielo?",
+    "¿Qué te hace sentir más conectado con Maricielo?",
+    "¿Cómo te gustaría sorprender a Maricielo en un día normal?",
+    "¿Qué es lo primero que piensas al despertarte junto a Maricielo?",
+    "¿Qué te gustaría decirle a Maricielo que nunca has dicho?",
+    "¿Cuál es tu recuerdo favorito de una fiesta o evento con Maricielo?",
+    "¿Qué te motivó a enamorarte de Maricielo?"
+  ];
+
+  const truths_mujer = [
+    "¿Qué es lo que más te gusta de José?",
+    "¿Cuál ha sido tu cita favorita con José?",
+    "¿Qué detalle romántico te gustaría recibir de José?",
+    "¿Cuál fue tu primer pensamiento cuando viste a José por primera vez?",
+    "¿Qué canción te recuerda a un momento especial con José?",
+    "¿Cuál es tu forma favorita de demostrar cariño a José?",
+    "¿Qué sueño te gustaría cumplir con José?",
+    "¿Qué te gusta que te diga José cuando están juntos?",
+    "¿Cuál ha sido un momento divertido que recuerdas con él?",
+    "¿Qué lugar te gustaría visitar con José para una escapada romántica?",
+    "¿Qué es lo más dulce que has hecho por José?",
+    "¿Cuál fue el primer detalle que notaste de José?",
+    "¿Qué es lo que más valoras en vuestra relación?",
+    "¿Tienes algún apodo cariñoso para José? ¿Cuál?",
+    "¿Cuál es la comida favorita que te gusta compartir con José?",
+    "¿Qué momento con José te hace sonreír siempre?",
+    "¿Qué palabras te gustaría escuchar de José con más frecuencia?",
+    "¿Cuál es tu recuerdo más especial con José durante un viaje?",
+    "¿Qué sería un plan perfecto para una noche juntos?",
+    "¿Qué hábito o costumbre de José te encanta?",
+    "¿Qué película romántica te recuerda a vuestra historia?",
+    "¿Cómo describirías a José en tres palabras?",
+    "¿Qué desafío divertido te gustaría intentar con José?",
+    "¿Qué canción dedicarías a José ahora mismo?",
+    "¿Cuál es tu lugar favorito para un abrazo con José?",
+    "¿Qué te hace sentir más conectada con José?",
+    "¿Cómo te gustaría sorprender a José en un día normal?",
+    "¿Qué es lo primero que piensas al despertarte junto a José?",
+    "¿Qué te gustaría decirle a José que nunca has dicho?",
+    "¿Cuál es tu recuerdo favorito de una fiesta o evento con José?",
+    "¿Qué te motivó a enamorarte de José?"
+  ];
+
+  const dares_hombre = [
+    "Da un beso suave en la mejilla a Maricielo.",
+    "Sostén la mano de Maricielo y mírala a los ojos por 20 segundos.",
+    "Dale un abrazo cálido y sincero a Maricielo.",
+    "Hazle un cumplido dulce a Maricielo con convicción y sonrisa.",
+    "Haz un masaje corto en los hombros a Maricielo.",
+    "Susurra algo tierno al oído de Maricielo.",
+    "Dale un beso en la frente con ternura.",
+    "Hazle cosquillas en una zona donde le guste.",
+    "Escríbele un mensaje bonito en el celular y muéstraselo.",
+    "Haz una pequeña sorpresa, como darle una flor o una nota dulce.",
+    "Déjale una nota de amor en un lugar sorpresa.",
+    "Prepárale un beso en la mano con mucha elegancia.",
+    "Cántale una canción suave y romántica.",
+    "Léele un poema corto o unas líneas lindas.",
+    "Sostén su rostro con las manos y mírala fijamente.",
+    "Hazle un pequeño dibujo o garabato divertido.",
+    "Regálale un cumplido sobre su sonrisa.",
+    "Baila lentamente con ella durante 30 segundos sin música.",
+    "Háblale sobre qué hace que le guste estar contigo.",
+    "Haz un gesto romántico inesperado.",
+    "Dale un apodo cariñoso durante el juego.",
+    "Hazle un masaje en la nuca y cuello por un minuto.",
+    "Dale un beso en las manos como un caballero.",
+    "Dedícale un brindis imaginario con palabras bonitas.",
+    "Hazle una promesa divertida y dulce.",
+    "Hacerse un selfie juntos en modo divertido.",
+    "Cuenta un recuerdo gracioso que vivieron juntos.",
+    "Simula una escena romántica de película.",
+    "Dale un poema improvisado sobre lo mucho que la quieres.",
+    "Hazle un gesto tierno con tus ojos."
+  ];
+
+  const dares_mujer = [
+    "Da un beso suave en la mejilla a José.",
+    "Haz un pequeño baile lento para José durante 30 segundos.",
+    "Baila un baile erótico para José durante 1 minuto.",
+    "Sostén la mano de José y míralo a los ojos por 20 segundos.",
+    "Dale un abrazo cálido y sincero a José.",
+    "Hazle un cumplido dulce a José con convicción y sonrisa.",
+    "Haz un masaje corto en los hombros a José.",
+    "Susurra algo tierno al oído de José.",
+    "Dale un beso en la frente con ternura.",
+    "Hazle cosquillas en una zona donde le guste.",
+    "Prepárale un beso en la mano con mucha elegancia.",
+    "Cántale una canción suave y romántica.",
+    "Léele un poema corto o unas líneas lindas.",
+    "Sostén su rostro con las manos y míralo fijamente.",
+    "Hazle un pequeño dibujo o garabato divertido.",
+    "Regálale un cumplido sobre su sonrisa.",
+    "Baila lentamente con él durante 30 segundos sin música.",
+    "Háblale sobre qué hace que le guste estar contigo.",
+    "Haz un gesto romántico inesperado.",
+    "Dale un apodo cariñoso durante el juego.",
+    "Hazle un masaje en la nuca y cuello por un minuto.",
+    "Dale un beso en las manos con ternura.",
+    "Dedícale un brindis imaginario con palabras bonitas.",
+    "Hazle una promesa divertida y dulce.",
+    "Hacerse un selfie juntos en modo divertido.",
+    "Cuenta un recuerdo gracioso que vivieron juntos.",
+    "Simula una escena romántica de película.",
+    "Dale un poema improvisado sobre lo mucho que lo quieres.",
+    "Hazle un gesto tierno con tus ojos.",
+    "Haz un baile erótico especial para José durante 1 minuto.",
+    "Baila una canción sensual lentamente para él."
+  ];
+
+  const players = {
+    "José": {
+      truths: truths_hombre,
+      dares: dares_hombre
+    },
+    "Maricielo": {
+      truths: truths_mujer,
+      dares: dares_mujer
+    }
+  };
+
+  let currentPlayer = null; // "José" or "Maricielo"
+  let currentQuestion = "";
+  let usedTruths = { "José": new Set(), "Maricielo": new Set() };
+  let usedDares = { "José": new Set(), "Maricielo": new Set() };
+
+  // Elements
+  const choosePlayerDiv = document.getElementById('choose-player');
+  const choiceButtonsDiv = document.getElementById('choice-buttons');
+  const questionContainer = document.getElementById('question-container');
+  const turnIndicator = document.getElementById('turn-indicator');
+  const questionDiv = document.getElementById('question');
+  const confirmBtn = document.getElementById('confirm-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  const btnJose = document.getElementById('btn-jose');
+  const btnMaricielo = document.getElementById('btn-maricielo');
+  const truthBtn = document.getElementById('truth-btn');
+  const dareBtn = document.getElementById('dare-btn');
+
+  function getRandomUnusedQuestion(arr, usedSet) {
+    if (usedSet.size === arr.length) {
+      // All used, reset
+      usedSet.clear();
+    }
+    let choice;
+    do {
+      choice = arr[Math.floor(Math.random() * arr.length)];
+    } while (usedSet.has(choice));
+    usedSet.add(choice);
+    return choice;
+  }
+
+  function startTurn(player) {
+    currentPlayer = player;
+    turnIndicator.textContent = `Turno de: ${player}`;
+    turnIndicator.style.display = 'block';
+    questionDiv.textContent = "";
+    confirmBtn.disabled = true;
+    nextBtn.disabled = true;
+
+    choosePlayerDiv.style.display = 'none';
+    questionContainer.style.display = 'none';
+    choiceButtonsDiv.style.display = 'block';
+  }
+
+  btnJose.addEventListener('click', () => startTurn("José"));
+  btnMaricielo.addEventListener('click', () => startTurn("Maricielo"));
+
+  truthBtn.addEventListener('click', () => {
+    const arr = players[currentPlayer].truths;
+    const usedSet = usedTruths[currentPlayer];
+    currentQuestion = getRandomUnusedQuestion(arr, usedSet);
+    questionDiv.textContent = currentQuestion;
+
+    choiceButtonsDiv.style.display = 'none';
+    questionContainer.style.display = 'block';
+    confirmBtn.disabled = false;
+    nextBtn.disabled = true;
+  });
+
+  dareBtn.addEventListener('click', () => {
+    const arr = players[currentPlayer].dares;
+    const usedSet = usedDares[currentPlayer];
+    currentQuestion = getRandomUnusedQuestion(arr, usedSet);
+    questionDiv.textContent = currentQuestion;
+
+    choiceButtonsDiv.style.display = 'none';
+    questionContainer.style.display = 'block';
+    confirmBtn.disabled = false;
+    nextBtn.disabled = true;
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    confirmBtn.disabled = true;
+    nextBtn.disabled = false;
+  });
+
+  nextBtn.addEventListener('click', () => {
+    questionDiv.textContent = "";
+    turnIndicator.style.display = 'none';
+    questionContainer.style.display = 'none';
+    choosePlayerDiv.style.display = 'block';
+
+    confirmBtn.disabled = true;
+    nextBtn.disabled = true;
+    currentPlayer = null;
+    currentQuestion = "";
+  });
+</script>
+</body>
+</html>
+
